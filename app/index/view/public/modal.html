@@ -1,0 +1,135 @@
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="hs-new-fold-modal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: none;padding-bottom: 0">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h2 class="modal-title " style="color: white;text-align: center">
+                    <span class="fa  fa-folder-open-o " style="color: #fddd02"></span>&nbsp; 新建文件夹
+                </h2>
+            </div>
+            <div class="modal-body">
+                <input type="text" id="folder_name" class="form-control">
+            </div>
+            <div style="text-align: center;margin-bottom: 20px">
+                <a type="button" class="btn btn-default"
+                   data-dismiss="modal">关闭
+                </a>
+                <a type="button" class="btn btn-success folder-confirm">
+                    确认
+                </a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+
+</div>
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="alert-modal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header" style="border-bottom: none;padding-bottom: 0">
+                <button type="button" class="close"
+                        data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h2 class="modal-title " style="color: white;text-align: center">
+                    <span class="fa fa-spin fa-key " style="color: #fddd02"></span>&nbsp; 请输入令牌
+                </h2>
+            </div>
+            <div class="modal-body">
+                <input type="password" id="hi-token" class="form-control">
+            </div>
+            <div style="text-align: center;margin-bottom: 20px">
+                <a type="button" class="btn btn-default"
+                   data-dismiss="modal">关闭
+                </a>
+                <a type="button" class="btn btn-success token-confirm">
+                    确认
+                </a>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+
+
+<!-- 模态框（Modal） -->
+<div class="modal fade" id="img-modal" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true" style="top: 0;padding-top: 10px;padding-bottom: 10px;overflow: scroll">
+
+
+            <img src="" alt=""  style="margin: auto;display: block">
+
+</div>
+<script>
+
+
+    $('#img-modal img').on('click',function(){
+        $('#img-modal').modal('hide');
+    });
+    $('#hi-token').keydown(function(event){
+
+        switch(event.keyCode) {
+            case 13:
+
+                $(".token-confirm").trigger('click');
+                break;
+        }
+    });
+
+
+
+
+
+
+
+    $('#alert-modal').on('click', '.token-confirm', function () {
+
+        var token = $('#hi-token').val();
+        $.post('__INDEX__index/verify', {token: token}, function (msg) {
+            switch (msg.status) {
+                case 1:
+                    $('.switch>input').prop("checked", true);
+                    $('#alert-modal').modal('hide');
+
+                    break;
+                case 0:
+
+                    var alert = $('<div class="alert alert-warning" style="display: none;margin-bottom: 5px"><strong>警告！</strong>' + msg.content + '</div>');
+                    $('#hi-token').before(alert);
+                    alert.slideDown('fast');
+                    setTimeout(function () {
+                        alert.slideUp('fast');
+                        alert.remove();
+                    }, 2000);
+
+                    break;
+
+            }
+
+        });
+    });
+
+
+    $('#alert-modal').on('shown.bs.modal',function(){
+
+        $('#hi-token').focus();
+    });
+
+    $('#search-title').on('keydown', function (event) {
+
+        switch (event.keyCode) {
+            case 13:
+                $('#search-btn').trigger('click');
+                break;
+        }
+
+    });
+</script>

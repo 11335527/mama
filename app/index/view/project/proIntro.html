@@ -1,0 +1,142 @@
+<!--<link rel="stylesheet" type="text/css" href="__S__h5-video/css/reset.css"/>-->
+<link rel="stylesheet" type="text/css" href="__S__h5-video/css/willesPlay.css"/>
+<script src="__S__h5-video/js/willesPlay.js" type="text/javascript" charset="utf-8"></script>
+
+<div class="container" id="mama-body">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h3 style="margin-bottom: 20px;">海尔词典项目简介</h3>
+            <!--<video style="height: 100%; width: 100%; display: block;" controls>-->
+                <!--<source src="__S__project/abc.mp4" type="video/mp4">-->
+                <!--<source src="movie.ogg" type="video/ogg">-->
+                <!--您的浏览器不支持 video 标签。-->
+            <!--</video>-->
+
+        <div id="willesPlay">
+
+            <div class="playContent">
+                <div class="turnoff">
+                    <ul>
+                        <!--<li><a href="javascript:;" title="喜欢" class="glyphicon glyphicon-heart-empty"></a></li>-->
+                        <li><a href="javascript:;" title="关灯"
+                               class="btnLight on "><i class="fa fa-desktop"></i></a></li>
+                        <!--<li><a href="javascript:;" title="分享" class="glyphicon glyphicon-share"></a></li>-->
+                    </ul>
+                </div>
+                <video width="100%" height="100%" id="playVideo">
+                    <source src="__S__project/abc.mp4" type="video/mp4">
+                    当前浏览器不支持 video直接播放，点击这里下载视频： <a href="/">下载视频</a>
+                </video>
+                <div class="playTip glyphicon glyphicon-play"></div>
+            </div>
+            <div class="playControll">
+                <div class="playPause playIcon"></div>
+                <div class="timebar">
+                    <span class="currentTime">0:00:00</span>
+                    <div class="progress">
+                        <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar"
+                             aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                    </div>
+                    <span class="duration">0:00:23</span>
+                </div>
+                <div class="otherControl">
+                    <span class="volume glyphicon glyphicon-volume-down"></span>
+                    <span class="fullScreen glyphicon glyphicon-fullscreen"></span>
+                    <div class="volumeBar">
+                        <div class="volumewrap">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0"
+                                     aria-valuemax="100" style="width: 8px;height: 40%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        </div>
+
+
+
+
+        <div class="col-md-12" style="margin-top: 30px;">
+            <hr style="border: 1px solid #ddd">
+            <h4 class="text-primary">开发组员：</h4>
+            <p>金一(ios)、丁宏贺(android)、张想想(php)、周凯(php)</p>
+            <h4 class="text-primary">负责模块：</h4>
+            <p>API接口开发，搭建后台</p>
+            <h4 class="text-primary">框架：</h4>
+            <p>bootstrap、tp5</p>
+            <h4 class="text-primary">开发周期：</h4>
+            <p>一个月</p>
+        </div>
+        <div class="col-md-12">
+            <hr style="border: 1px solid #ddd">
+
+            <h4>项目截图：</h4>
+            <div class="col-md-2">
+                <img src="__S__project/img/1.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/2.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/3.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/4.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/5.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/6.png" alt="" class="img-responsive">
+            </div>
+
+
+            <div class="col-md-2">
+                <img src="__S__project/img/7.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/8.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/13.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/10.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/11.png" alt="" class="img-responsive">
+            </div>
+            <div class="col-md-2">
+                <img src="__S__project/img/12.png" alt="" class="img-responsive">
+            </div>
+        </div>
+
+
+    </div>
+</div>
+{include file="public/bottom"/}
+<script>
+    $(function(){
+        //footer:margin-top
+        var $prevDiv = $("#mama-body");
+        var $footer = $("footer");
+        var all = $(window).height();//是文档窗口高度
+        var top = $prevDiv.offset().top;//是标签距离顶部高度
+        var scroll = $(document).scrollTop();//是滚动条高度
+        var height = $prevDiv.height();//是标签高度
+        var f = $footer.height();
+        //你要的高度
+        var margin_top = all - height - (top - scroll) - f - 20;
+        if (margin_top > 0) {
+            $footer.css('margin-top', margin_top);
+        } else {
+            $footer.css('margin-top', '30px');
+        }
+        $footer.fadeIn("slow");
+    });
+</script>

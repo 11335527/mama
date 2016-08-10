@@ -1,0 +1,85 @@
+
+<div class="container" id="mama-body">
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            <div class="row">
+
+                <div class="col-lg-4"> <h3>访客记录</h3></div>
+                <div class="col-lg-4 col-lg-offset-4">
+                    <div class="input-group" style="margin: 11px 0">
+                        <input type="text" class="form-control" id="ip" placeholder="想要清除的IP">
+               <span class="input-group-btn">
+                  <button class="btn btn-default" style="border: solid 1px #ddd" id="clean-ip" type="button">
+                      清除
+                  </button>
+               </span>
+                    </div><!-- /input-group -->
+                </div><!-- /.col-lg-6 -->
+            </div>
+        </div>
+        <div class="panel-body">
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>访问ip</th>
+                    <th>访问地址</th>
+                    <th>访问时间</th>
+                    <th>访问位置</th>
+                </tr>
+                </thead>
+                <tbody>
+                {foreach $list as $vo}
+                <tr>
+                    <td>{$vo.ip}</td>
+                    <td>{$vo.ip_ad}</td>
+                    <td>{$vo.time}</td>
+                    <td>{$vo.type}</td>
+                </tr>
+                {/foreach}
+                </tbody>
+            </table>
+            {$list->render()}
+        </div>
+    </div>
+
+</div>
+{include file="public/bottom"/}
+
+<script>
+    $(function(){
+        //footer:margin-top
+        var $prevDiv = $("#mama-body");
+        var $footer = $("footer");
+        var all = $(window).height();//是文档窗口高度
+        var top = $prevDiv.offset().top;//是标签距离顶部高度
+        var scroll = $(document).scrollTop();//是滚动条高度
+        var height = $prevDiv.height();//是标签高度
+        var f = $footer.height();
+        //你要的高度
+        var margin_top = all - height - (top - scroll) - f - 20;
+        if (margin_top > 0) {
+            $footer.css('margin-top', margin_top);
+        } else {
+            $footer.css('margin-top', '10px');
+        }
+        $footer.fadeIn("slow");
+
+
+
+        $('#clean-ip').on('click',function(){
+            $.post('__INDEX__log/clean',{ip:$('#ip').val()},function(msg){
+
+                switch(msg.status){
+                    case 1:
+                        window.location.reload();
+                            break;
+                    case 3:
+                        $('#alert-modal').modal();
+                        break;
+
+                }
+            })
+        });
+    });
+</script>

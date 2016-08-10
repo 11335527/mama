@@ -1,0 +1,87 @@
+<div class="container" id="mama-body">
+    <div>
+
+
+    <h3>联系MaMa&nbsp;&nbsp;<small>技术交流、合作</small></h3>
+
+    <textarea name="content" class="form-control" id="" cols="30" rows="10" style="resize: none"></textarea>
+    <a href="javascript:void (0)" class="btn btn-success btn-block" id="submit-contact">提交</a>
+    </div>
+    <div class="list-group" style="margin-top: 50px">
+        <div href="#" class="list-group-item" id="list-first">
+            <h3 class="list-group-item-heading">
+                信息列表
+            </h3>
+        </div>
+        {foreach $list as $vo}
+        <div href="#" class="list-group-item">
+            <h5 class="list-group-item-heading text-primary">
+                {$vo.ip_ad}
+            </h5>
+            <p class="list-group-item-text">
+               {$vo.content}
+            </p>
+            <small> {$vo.time}</small>
+        </div>
+        {/foreach}
+    </div>
+
+    {$list->render()}
+</div>
+{include file="public/bottom"/}
+<script>
+    $(function(){
+        //footer:margin-top
+        var $prevDiv = $("#mama-body");
+        var $footer = $("footer");
+        var all = $(window).height();//是文档窗口高度
+        var top = $prevDiv.offset().top;//是标签距离顶部高度
+        var scroll = $(document).scrollTop();//是滚动条高度
+        var height = $prevDiv.height();//是标签高度
+        var f = $footer.height();
+        //你要的高度
+        var margin_top = all - height - (top - scroll) - f - 20;
+        if (margin_top > 0) {
+            $footer.css('margin-top', margin_top);
+        } else {
+            $footer.css('margin-top', '10px');
+        }
+        $footer.fadeIn("slow");
+
+
+        $('#submit-contact').on('click',function(){
+            $.post('__INDEX__me/doContact',{content:$("[name='content']").val()},function(msg){
+
+
+                switch (msg.status){
+                    case 1:
+                        var alert = $('<div class="alert alert-success" style="display: none;margin-bottom: 5px"><strong>成功</strong>提交成功</div>');
+                        $("[name='content']").before(alert);
+                        alert.slideDown('fast');
+                        setTimeout(function () {
+                            alert.slideUp('fast');
+                            alert.remove();
+                        }, 1000);
+
+                        var $div = $('<div href="#" class="list-group-item" data-id="'+msg.content.id+'">' +
+                                '<h5 class="list-group-item-heading text-primary">'+msg.content.ip_ad+'</h5>' +
+                                '<p class="list-group-item-text">'+msg.content.content+'</p><small> '+msg.content.time+'</small>' +
+                                '</div>');
+                            $('#list-first').after($div);
+                        $("[name='content']").val('');
+
+                        break;
+                    case 0:
+                        var alert=$('<div class="alert alert-warning" style="display: none;margin-bottom: 5px"><strong>警告！</strong>'+msg.content+'</div>');
+                        $("[name='content']").before(alert);
+                        alert.slideDown('fast');
+                        setTimeout(function(){
+                            alert.slideUp('fast');
+                            alert.remove();
+                        },1000);
+                        break;
+                }
+            });
+        });
+    });
+</script>

@@ -1,0 +1,52 @@
+<div id="body">
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-9">
+                <div class="list-group">
+                    <a href="#" class="list-group-item active">
+                        <h4 class="list-group-item-heading">
+                            笔记
+                        </h4>
+                    </a>
+
+                    {volist name='list' id='v'}
+                    <div class="list-group-item">
+
+                        <a href="__SITE__art/id/{$v.id}"><h4 class="list-group-item-heading">{$v.title}</h4></a>
+
+
+                        <p class="list-group-item-text">
+                            <span>复习次数：{$v.review_count}</span><span>复习时间：{$v.review_time}</span><span>复习阶段：</span><span
+                                class="{$v.review_status==1?'text-warning':'text-danger'}">{$v.status}</span></p>
+                    </div>
+                    {/volist}
+
+
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+
+
+
+
+
+
+
+
+    })
+</script>
+
+
+
+
+

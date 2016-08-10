@@ -1,0 +1,113 @@
+<!--<link rel="stylesheet" type="text/css" href="__S__h5-video/css/reset.css"/>-->
+<link rel="stylesheet" type="text/css" href="__S__h5-video/css/willesPlay.css"/>
+<script src="__S__h5-video/js/willesPlay.js" type="text/javascript" charset="utf-8"></script>
+
+<div class="container" id="mama-body">
+    <div class="row">
+
+        <div class="col-md-12">
+            <h3 style="margin-bottom: 20px;">海尔全球沟通平台项目简介</h3>
+            <!--<video style="height: 100%; width: 100%; display: block;" controls>-->
+            <!--<source src="__S__project/abc.mp4" type="video/mp4">-->
+            <!--<source src="movie.ogg" type="video/ogg">-->
+            <!--您的浏览器不支持 video 标签。-->
+            <!--</video>-->
+
+            <div id="willesPlay">
+
+                <div class="playContent">
+                    <div class="turnoff">
+                        <ul>
+                            <!--<li><a href="javascript:;" title="喜欢" class="glyphicon glyphicon-heart-empty"></a></li>-->
+                            <li><a href="javascript:;" title="关灯"
+                                   class="btnLight on "><i class="fa fa-desktop"></i></a></li>
+                            <!--<li><a href="javascript:;" title="分享" class="glyphicon glyphicon-share"></a></li>-->
+                        </ul>
+                    </div>
+                    <video width="100%" height="100%" id="playVideo">
+                        <source src="__S__project/haier.mp4" type="video/mp4">
+                        当前浏览器不支持 video直接播放，点击这里下载视频： <a href="/">下载视频</a>
+                    </video>
+                    <div class="playTip glyphicon glyphicon-play"></div>
+                </div>
+                <div class="playControll">
+                    <div class="playPause playIcon"></div>
+                    <div class="timebar">
+                        <span class="currentTime">0:00:00</span>
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-primary progress-bar-striped" role="progressbar"
+                                 aria-valuemin="0" aria-valuemax="100" style="width: 0%"></div>
+                        </div>
+                        <span class="duration">0:00:23</span>
+                    </div>
+                    <div class="otherControl">
+                        <span class="volume glyphicon glyphicon-volume-down"></span>
+                        <span class="fullScreen glyphicon glyphicon-fullscreen"></span>
+                        <div class="volumeBar">
+                            <div class="volumewrap">
+                                <div class="progress">
+                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuemin="0"
+                                         aria-valuemax="100" style="width: 8px;height: 40%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+
+
+
+
+        <div class="col-md-12" style="margin-top: 30px;">
+            <hr style="border: 1px solid #ddd">
+            <h4 class="text-primary">开发组员：</h4>
+            <p>张伟（产品）、周凯（php）</p>
+            <h4 class="text-primary">负责模块：</h4>
+            <p>全栈</p>
+            <h4 class="text-primary">框架：</h4>
+            <p>bootstrap、tp3.2</p>
+            <h4 class="text-primary">开发周期：</h4>
+            <p>40天</p>
+        </div>
+        <div class="col-md-12">
+            <hr style="border: 1px solid #ddd">
+
+            <h4>项目描述：</h4>
+            <p>功能模块：资讯发布功能，审核与限制权限发布、以及文章的评论、点赞、收藏功能</p>
+            <p>功能模块：文件管理功能，支持大文件分片上传，支持图片、视频、文档的管理</p>
+            <p>功能模块：PDF格式期刊发布、预览</p>
+            <p>功能模块：社区功能、圈子的创建与互相关注，用户可互相关注，话题的创建、评论、点赞、关注</p>
+            <p>功能模块：公告发布、ceo频道（文章可发布视频）等类资讯功能</p>
+            <p>管理员操作：后台操作体验可看视频，在后台交互体验上开发所耗费时间是前台的2倍左右</p>
+            <p>安全：应客户需求，走https协议，全站的上传入口、表单都做了完善的过滤机制，用户采用单点登录技术，用户无需注册，类似与QQ的第三方登录。QQ是采用OAUTH2.0标准，haier采用SAML2.0标准</p>
+
+
+        </div>
+
+
+    </div>
+</div>
+{include file="public/bottom"/}
+<script>
+    $(function(){
+        //footer:margin-top
+        var $prevDiv = $("#mama-body");
+        var $footer = $("footer");
+        var all = $(window).height();//是文档窗口高度
+        var top = $prevDiv.offset().top;//是标签距离顶部高度
+        var scroll = $(document).scrollTop();//是滚动条高度
+        var height = $prevDiv.height();//是标签高度
+        var f = $footer.height();
+        //你要的高度
+        var margin_top = all - height - (top - scroll) - f - 20;
+        if (margin_top > 0) {
+            $footer.css('margin-top', margin_top);
+        } else {
+            $footer.css('margin-top', '30px');
+        }
+        $footer.fadeIn("slow");
+    });
+</script>

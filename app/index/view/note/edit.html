@@ -1,0 +1,218 @@
+<div class="container">
+
+
+
+    <link rel="stylesheet" href="__S__editor/dist/css/wangEditor.min.css">
+    <script src="__S__editor/dist/js/wangEditor.min.js"></script>
+
+    <div class="row">
+        <div class="col-md-9 col-sm-12 col-xs-12 " style="min-height: 860px;padding-top: 30px">
+
+
+
+
+
+                    <form id="form">
+                        <input type="text" class="art-title" name="title" value="{$info.title}">
+                        <input type="hidden" name="id" id="art-id" value="{$info.id}">
+                        <!-- 加载编辑器的容器 -->
+                        <div id="editor" style="height: 1207px;">{$info.content}</div>
+
+                    </form>
+
+
+
+
+
+            <div class="hs-btn-float hvr-pulse-shrink" style="z-index: 1" id="art-save"><p>提交</p><p>编辑</p></div>
+
+        </div>
+
+        <div class="col-md-3">
+            <div>
+
+
+                <textarea name="text" class="form-control" id="digest" style=" resize: none;margin-bottom: 10px" cols="30" rows="3"></textarea>
+                <div class=" text-right">
+
+                    <a href="javascript:void (0);" id="digest-confirm"  class="btn btn-success btn-sm hvr-round-corners">笔记摘要</a>
+                </div>
+
+            </div>
+            <div class="list-group" id="digest-list">
+
+                {foreach $info['digest'] as $vo}
+                <div  class="list-group-item">
+                    <p class="list-group-item-text">{$vo.content}</p>
+                    <p style="margin-bottom: 0"><small class="text-primary"><span >{$vo.create_time}</span></small></p></div>
+
+                {/foreach}
+            </div>
+
+
+
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(function () {
+
+        //初始化编辑器
+        var editor = new wangEditor('editor');
+        editor.config.uploadImgUrl = '__INDEX__image/editorUpload';
+        editor.config.emotions = {
+            // 支持多组表情
+
+            // 第一组，id叫做 'default'
+            'default': {
+                title: '默认',  // 组名称
+                data: [  // data 还可以直接赋值为一个表情包数组
+                    // 第一个表情
+                    {
+                        'icon': '/static/editor/qq_expression/1.gif',
+                        'value': '[惊讶]'
+                    },
+                    // 第二个表情
+                    {
+                        'icon': 'http://img.t.sinajs.cn/t35/style/images/common/face/ext/normal/60/horse2_thumb.gif',
+                        'value': '[神马]'
+                    }
+                    // 下面还可以继续，第三个、第四个、第N个表情。。。
+                ]
+            }
+        };
+        editor.create();
+        //保存笔记
+
+
+        $('#art-save').on('click', function () {
+
+            var fd = new FormData($('#form')[0]);
+
+            //找出内容中的图片
+            var content = editor.$txt.html();
+            $(content).find('img').each(function (index) {
+                fd.append('src[]', $(this).attr('src'));
+            });
+
+
+
+            fd.append('content', content);
+
+            $.ajax({
+                type: 'post',
+                url: '__INDEX__note/saveArt',
+                data: fd,
+                dataType: 'json',
+                success: function (msg) {
+                    //令牌
+
+
+
+
+
+                    var $editor = $(".art-editor");
+                    switch (msg.status){
+                        case 1:
+
+                         window.self.location=document.referrer;
+
+                            break;
+                        case 0:
+                            var alert=$('<div class="alert alert-warning" style="display: none"><strong>警告！</strong>'+msg.content+'</div>');
+                            $editor.prepend(alert);
+                            alert.slideDown('fast');
+                            setTimeout(function(){
+                                alert.slideUp('fast');
+                                alert.remove();
+                            },2000);
+                            break;
+                        case 3:
+                            $('#alert-modal').modal();
+
+                            break;
+                    }
+
+                },
+                processData: false,  // 告诉jQuery不要去处理发送的数据
+                contentType: false // 告诉jQuery不要去设置Content-Type请求头
+            });
+
+        });
+
+        //复习按钮
+
+        $('#review-btn').one('click',function(){
+              var id=$(this).attr('data-id');
+            $.post('__INDEX__note/review',{id:id},function(msg){
+                switch(msg.status){
+                    case 1:
+                        $('#review-btn').css('background-color','#bbb');
+                        var count=$('#review_count');
+                        var num=parseInt(count.html(),10)+1;
+                        count.html(num);
+
+                        if(num==7){
+                            $('#review_status').html('复习完成');
+                        }
+                        break;
+
+                    case 3:
+                        $('#alert-modal').modal();
+                        break;
+                }
+
+            })
+        });
+
+        //添加摘要
+        $('#digest-confirm').on('click', function () {
+
+            var content= $('#digest').val(),
+                    aid="<?php echo $_GET['id'];?>";
+            $.post('__INDEX__note/addDigest', {
+                content:content,
+                aid: aid
+            }, function (msg) {
+
+                var $digest=$('#digest');
+
+                switch(msg.status){
+                    case 1:
+                        var a=$(' <a href="#" class="list-group-item">'+
+                                '<p class="list-group-item-text">'+content+'</p>'+
+                                '<p style="margin-bottom: 0"><small class="text-primary"><span >'+msg.content.create_time+'</span></small></p></a>');
+                        $('#digest-list').prepend(a);
+                        $digest.val('');
+//                        var alert=$('<div class="alert alert-success" style="display: none;margin-bottom: 5px"><strong>成功</strong>添加成功</div>');
+//                        $digest.before(alert);
+//                        alert.slideDown('fast');
+//                        setTimeout(function(){
+//                            alert.slideUp('fast');
+//                            alert.remove();
+//                        },1000);
+
+                        break;
+                    case 0:
+                        var alert=$('<div class="alert alert-warning" style="display: none;margin-bottom: 5px"><strong>警告！</strong>'+msg.content+'</div>');
+                        $digest.before(alert);
+                        alert.slideDown('fast');
+                        setTimeout(function(){
+                            alert.slideUp('fast');
+                            alert.remove();
+                        },1000);
+                        break;
+                    case 3:
+                        $('#alert-modal').modal();
+                        break;
+                }
+
+
+
+            });
+        });
+
+    });
+</script>

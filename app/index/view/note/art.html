@@ -1,0 +1,216 @@
+<div class="container" id="mama-body">
+
+
+
+
+    <div class="row">
+        <div class="col-md-9 col-sm-12 col-xs-12 bg-default" style="min-height: 860px">
+
+            <div class="page-header" style="border-bottom: 1px solid #ddd;margin-top: 20px ">
+                <h3 style="margin-top: 0" >{$info.title}
+                    <small><span class="label label-success">{$info.dirName.name}</span></small>
+                </h3>
+                <ul class="list-inline text-muted" style="margin-bottom: 0px;">
+                    <li><small>创建时间：<span class="text-primary">{$info.create_time}</span></small></li>
+                    <li  class="hidden-xs"><small>下次复习时间：<span class="text-primary">{$info.review_time}</span></small></li>
+                    <li><small>复习次数：<span class="text-primary" id="review_count">{$info.review_count}</span></small></li>
+                    <li  class="hidden-xs"><small>复习状态：<span class="text-danger" id="review_status">{$info.status}</span></small></li>
+                    <li class="pull-right hidden-xs"><a class="text-primary " href="__SITE__edit/{$info.id}"><small>编辑</small></a></li>
+
+                </ul>
+            </div>
+
+
+            <div class="art-body">
+                {$info.content}
+            </div>
+            <div class="hidden-xs">
+                <div class="hs-btn-float hvr-buzz" style="bottom: 240px" ><a href="#" style="color: white;text-decoration: none"><p>返回</p><p>顶部</p></a></div>
+                <div class="hs-btn-float hvr-buzz" style="bottom: 180px" ><a href="__SITE__edit/{$info.id}" style="color: white;text-decoration: none"><p>编辑</p><p>笔记</p></a></div>
+                {gt name="$info['review_count']" value="6"}
+                <div class="hs-btn-float " style="bottom: 120px;background-color: #888" ><p>不再</p><p>复习</p></div>
+                <div class="hs-btn-float  "  style="background-color: #888"><p>复习</p><p>完成</p></div>
+                {else/}
+
+                <div class="hs-btn-float hvr-buzz not-review" data-id="{$info.id}" style="bottom: 120px" ><p>不再</p><p>复习</p></div>
+                <div class="hs-btn-float hvr-buzz review-btn" data-id="{$info.id}"><p>复习</p><p>完成</p></div>
+                {/gt}
+
+            </div>
+
+        </div>
+
+        <div class="visible-xs" style="margin-bottom: 1px">&nbsp;</div>
+        <div class=" visible-xs text-center" style="margin-bottom:30px;">
+            <a class="btn btn-success hvr-round-corners btn-sm" href="#" style="color: white;text-decoration: none">返回顶部</a>
+            <!--<a class="btn btn-success btn-sm" href="__SITE__edit/{$info.id}" style="color: white;text-decoration: none">编辑笔记</a>-->
+            <a href="javascript:void (0);"  class="btn btn-success btn-sm  hvr-round-corners review-btn"  data-id="{$info.id}">复习完成</a>
+        </div>
+
+        <div class="col-md-3" style="padding-top: 0">
+            <div>
+
+
+                <textarea name="text" class="form-control" id="digest" style=" resize: none;margin-bottom: 10px" cols="30" rows="3"></textarea>
+                <div class=" text-right">
+
+                    <a href="javascript:void (0);" id="digest-confirm"  class="btn btn-success btn-sm hvr-round-corners">笔记摘要</a>
+                </div>
+
+            </div>
+            <div class="list-group" id="digest-list">
+
+                {foreach $info['digest'] as $vo}
+                <div  class="list-group-item">
+                    <p class="list-group-item-text">{$vo.content}</p>
+                    <p style="margin-bottom: 0"><small class="text-primary"><span >{$vo.create_time}</span></small></p></div>
+
+                {/foreach}
+            </div>
+
+
+            <div class="list-group" id="art-list">
+                <div class="list-group-item">
+                    <h4 class="list-group-item-heading">
+
+                       类目最新笔记
+                    </h4>
+                </div>
+                {foreach $artList as $vo}
+                <abbr title="{$vo.title}" style="border: none;cursor:pointer">
+                    <a href="__SITE__art/id/{$vo.id}" data-id="{$vo.id}" class="list-group-item">
+                        <p class="list-group-item-text">
+                            {$vo.title}
+                        </p>
+                    </a>
+                </abbr>
+                {/foreach}
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{include file="public/bottom"/}
+<script>
+
+    window.onload=function(){
+
+        //footer:margin-top
+        var $prevDiv = $("#mama-body");
+        var $footer = $("footer");
+        var all = $(window).height();//是文档窗口高度
+        var top = $prevDiv.offset().top;//是标签距离顶部高度
+        var scroll = $(document).scrollTop();//是滚动条高度
+        var height = $prevDiv.height();//是标签高度
+        var f = $footer.height();
+        //你要的高度
+        var margin_top = all - height - (top - scroll) - f - 20;
+        if (margin_top > 0) {
+            $footer.css('margin-top', margin_top);
+        } else {
+            $footer.css('margin-top', '30px');
+        }
+        $footer.fadeIn("slow");
+
+        $('.art-body img').addClass('img-responsive');
+
+        $('body').on('dblclick','.art-body img',function(){
+            var src=$(this).attr('src');
+            var $img=$('#img-modal').find('img');
+            $img.attr('src',src);
+            $('#img-modal').modal();
+        });
+        //复习按钮
+
+        $('.review-btn').one('click',function(){
+              var id=$(this).attr('data-id');
+            $.post('__INDEX__note/review',{id:id},function(msg){
+                switch(msg.status){
+                    case 1:
+                        $('.review-btn').css('background-color','#888');
+                        var count=$('#review_count');
+                        var num=parseInt(count.html(),10)+1;
+                        count.html(num);
+
+                        if(num==7){
+                            $('#review_status').html('复习完成');
+                        }
+                        break;
+
+                    case 3:
+                        $('#alert-modal').modal();
+                        break;
+                }
+
+            })
+        });
+
+        $('.not-review').one('click',function(){
+            var id=$(this).attr('data-id');
+            $.post('__INDEX__note/reviewComplete',{id:id},function(msg){
+                switch(msg.status){
+                    case 1:
+                        $('.not-review').css('background-color','#888');
+                        $('.review-btn').css('background-color','#888');
+                        var count=$('#review_count').html(7);
+                            $('#review_status').html('复习完成');
+                        break;
+
+                    case 3:
+                        $('#alert-modal').modal();
+                        break;
+                }
+
+            })
+        });
+
+        //添加摘要
+        $('#digest-confirm').on('click', function () {
+
+            var content= $('#digest').val(),
+                    aid="<?php echo $_GET['id'];?>";
+            $.post('__INDEX__note/addDigest', {
+                content:content,
+                aid: aid
+            }, function (msg) {
+
+                var $digest=$('#digest');
+
+                switch(msg.status){
+                    case 1:
+                        var a=$(' <a href="#" class="list-group-item">'+
+                                '<p class="list-group-item-text">'+content+'</p>'+
+                                '<p style="margin-bottom: 0"><small class="text-primary"><span >'+msg.content.create_time+'</span></small></p></a>');
+                        $('#digest-list').prepend(a);
+                        $digest.val('');
+//                        var alert=$('<div class="alert alert-success" style="display: none;margin-bottom: 5px"><strong>成功</strong>添加成功</div>');
+//                        $digest.before(alert);
+//                        alert.slideDown('fast');
+//                        setTimeout(function(){
+//                            alert.slideUp('fast');
+//                            alert.remove();
+//                        },1000);
+
+                        break;
+                    case 0:
+                        var alert=$('<div class="alert alert-warning" style="display: none;margin-bottom: 5px"><strong>警告！</strong>'+msg.content+'</div>');
+                        $digest.before(alert);
+                        alert.slideDown('fast');
+                        setTimeout(function(){
+                            alert.slideUp('fast');
+                            alert.remove();
+                        },1000);
+                        break;
+                    case 3:
+                        $('#alert-modal').modal();
+                        break;
+                }
+
+
+
+            });
+        });
+
+    };
+</script>
